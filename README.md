@@ -1,4 +1,4 @@
-# DevConnector 2.0
+# Full Stack React login template
 
 > Social network for developers
 
