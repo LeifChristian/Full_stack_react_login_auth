@@ -10,6 +10,7 @@ const checkObjectId = require('../../middleware/checkObjectId');
 // @route    POST api/posts
 // @desc     Create a post
 // @access   Private
+
 router.post(
   '/',
   [auth, [check('text', 'Text is required').not().isEmpty()]],
@@ -20,6 +21,7 @@ router.post(
     }
 
     try {
+
       const user = await User.findById(req.user.id).select('-password');
 
       const newPost = new Post({
@@ -42,7 +44,9 @@ router.post(
 // @route    GET api/posts
 // @desc     Get all posts
 // @access   Private
+
 router.get('/', auth, async (req, res) => {
+
   try {
     const posts = await Post.find().sort({ date: -1 });
     res.json(posts);
@@ -55,6 +59,7 @@ router.get('/', auth, async (req, res) => {
 // @route    GET api/posts/:id
 // @desc     Get post by ID
 // @access   Private
+
 router.get('/:id', [auth, checkObjectId('id')], async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -70,6 +75,7 @@ router.get('/:id', [auth, checkObjectId('id')], async (req, res) => {
 // @route    DELETE api/posts/:id
 // @desc     Delete a post
 // @access   Private
+
 router.delete('/:id', [auth, checkObjectId('id')], async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -125,12 +131,9 @@ router.put('/unlike/:id', [auth, checkObjectId('id')], async (req, res) => {
     }
 
     // remove the like
-    post.likes = post.likes.filter(
-      ({ user }) => user.toString() !== req.user.id
-    );
+    post.likes = post.likes.filter(({ user }) => user.toString() !== req.user.id);
 
     await post.save();
-
     return res.json(post.likes);
   } catch (err) {
     console.error(err.message);
@@ -141,6 +144,7 @@ router.put('/unlike/:id', [auth, checkObjectId('id')], async (req, res) => {
 // @route    POST api/posts/comment/:id
 // @desc     Comment on a post
 // @access   Private
+
 router.post(
   '/comment/:id',
   [
@@ -180,7 +184,9 @@ router.post(
 // @route    DELETE api/posts/comment/:id/:comment_id
 // @desc     Delete comment
 // @access   Private
+
 router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
+  
   try {
     const post = await Post.findById(req.params.id);
 
